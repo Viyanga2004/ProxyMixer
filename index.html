@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProxyMaster | Premium Proxy Mixer</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #f43f5e;
+            --dark: #1e293b;
+            --darker: #0f172a;
+            --light: #f8fafc;
+            --gray: #94a3b8;
+            --success: #10b981;
+            --glass: rgba(255, 255, 255, 0.05);
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--darker), var(--dark));
+            color: var(--light);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--glass);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle {
+            background: var(--glass);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--gray);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .card {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .description {
+            color: var(--gray);
+            margin-bottom: 2rem;
+            max-width: 700px;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .file-input-container {
+            position: relative;
+            overflow: hidden;
+            flex-grow: 1;
+        }
+
+        .file-input-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px dashed var(--primary);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .file-input-label:hover {
+            background: rgba(99, 102, 241, 0.2);
+        }
+
+        .file-input-label i {
+            font-size: 1.25rem;
+            color: var(--primary);
+        }
+
+        .file-input {
+            position: absolute;
+            width: 0.1px;
+            height: 0.1px;
+            opacity: 0;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 1.25rem;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            resize: vertical;
+            color: white;
+            font-family: 'Inter', monospace;
+            font-size: 0.9rem;
+            line-height: 1.7;
+            transition: var(--transition);
+            margin-bottom: 1.5rem;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-danger {
+            background: rgba(244, 63, 94, 0.1);
+            color: var(--secondary);
+        }
+
+        .btn-danger:hover {
+            background: rgba(244, 63, 94, 0.2);
+        }
+
+        .options {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .checkbox {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background: rgba(15, 23, 42, 0.5);
+            padding: 1.25rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--gray);
+        }
+
+        .preview {
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 1rem;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            font-family: 'Inter', monospace;
+            font-size: 0.85rem;
+        }
+
+        .preview-line {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .preview-line:last-child {
+            border-bottom: none;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(5px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+        }
+
+        .loading-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 1.125rem;
+            color: var(--gray);
+            margin-top: 1rem;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--success);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            transform: translateY(20px);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 1001;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+            }
+            
+            .toolbar {
+                flex-direction: column;
+            }
+            
+            .options {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-random"></i>
+                </div>
+                <span>ProxyMaster</span>
+            </div>
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </header>
+
+        <main>
+            <div class="card">
+                <h1>Premium Proxy Mixer &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   ( For Personal Use Only )</h1>
+                <p class="description">
+                    Upload multiple proxy list files or paste them directly below. 
+                    Our advanced mixer will randomize, validate, and optimize your proxies 
+                    for maximum performance.
+                </p>
+
+                <div class="toolbar">
+                    <div class="file-input-container">
+                        <label for="fileInput" class="file-input-label">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span>Choose Files</span>
+                        </label>
+                        <input type="file" id="fileInput" class="file-input" multiple accept=".txt">
+                    </div>
+                    <button class="btn btn-secondary" onclick="loadSample()">
+                        <i class="fas fa-vial"></i> Load Sample
+                    </button>
+                    <button class="btn btn-danger" onclick="clearAll()">
+                        <i class="fas fa-trash-alt"></i> Clear All
+                    </button>
+                </div>
+
+                <textarea id="proxyInput" placeholder="Paste your proxies here, one per line...\nExample: us.proxy.geonode.io:10000:username:password"></textarea>
+
+                <div class="options">
+                    <div class="option">
+                        <input type="checkbox" id="removeDuplicates" class="checkbox" checked>
+                        <label for="removeDuplicates">Remove duplicates</label>
+                    </div>
+                    <div class="option">
+                        <input type="checkbox" id="validateProxies" class="checkbox" checked>
+                        <label for="validateProxies">Validate format</label>
+                    </div>
+                </div>
+
+                <div class="stats" id="stats">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalProxies">0</div>
+                        <div class="stat-label">Total Proxies</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="validProxies">0</div>
+                        <div class="stat-label">Valid Format</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="duplicatesRemoved">0</div>
+                        <div class="stat-label">Duplicates Removed</div>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" onclick="processProxies()">
+                    <i class="fas fa-random"></i> Mix & Download Proxies
+                </button>
+            </div>
+
+            <div class="card">
+                <h2>Preview (First 50 Proxies)</h2>
+                <div class="preview" id="preview">
+                    <div class="preview-line">Your mixed proxies will appear here...</div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="loading-text">Processing your proxies...</div>
+    </div>
+
+    <div class="toast" id="toast">Proxies downloaded successfully!</div>
+
+    <script>
+        // Configuration
+        const VALID_PROXY_PATTERN = /^[^\s:]+:\d+:.+:.+$/;
+        let originalCount = 0;
+        let validCount = 0;
+        let duplicatesCount = 0;
+
+        // DOM Elements
+        const proxyInput = document.getElementById('proxyInput');
+        const fileInput = document.getElementById('fileInput');
+        const statsElement = document.getElementById('stats');
+        const previewElement = document.getElementById('preview');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const toast = document.getElementById('toast');
+        const themeToggle = document.getElementById('themeToggle');
+
+        // Theme Management
+        themeToggle.addEventListener('click', toggleTheme);
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+            const icon = themeToggle.querySelector('i');
+            if (document.body.classList.contains('dark-theme')) {
+                icon.classList.replace('fa-moon', 'fa-sun');
+            } else {
+                icon.classList.replace('fa-sun', 'fa-moon');
+            }
+        }
+
+        // Main Processing Function
+        async function processProxies() {
+            showLoading(true);
+            
+            try {
+                // Collect proxies from all sources
+                const proxies = await getAllProxies();
+                originalCount = proxies.length;
+                
+                // Process proxies
+                const processedProxies = processProxyList(proxies);
+                
+                // Update UI
+                updateStats(processedProxies.length);
+                updatePreview(processedProxies);
+                
+                // Download
+                downloadProxies(processedProxies);
+                
+                // Show success notification
+                showToast('Proxies processed and downloaded successfully!');
+            } catch (error) {
+                console.error('Error:', error);
+                showToast(`Error: ${error.message}`, 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Helper Functions
+        async function getAllProxies() {
+            let proxies = [];
+            
+            // Get from textarea
+            const textProxies = proxyInput.value
+                .split('\n')
+                .map(line => line.trim())
+                .filter(line => line);
+            
+            proxies = proxies.concat(textProxies);
+
+            // Get from files
+            if (fileInput.files.length > 0) {
+                for (const file of fileInput.files) {
+                    if (!file.name.endsWith('.txt')) {
+                        throw new Error('Only .txt files are supported');
+                    }
+                    
+                    const content = await readFile(file);
+                    proxies = proxies.concat(content.split('\n').map(line => line.trim()));
+                }
+            }
+
+            return proxies.filter(line => line);
+        }
+
+        function processProxyList(proxies) {
+            // Validation
+            const validate = document.getElementById('validateProxies').checked;
+            if (validate) {
+                proxies = proxies.filter(proxy => VALID_PROXY_PATTERN.test(proxy));
+                validCount = proxies.length;
+            }
+
+            // Deduplication
+            const removeDupes = document.getElementById('removeDuplicates').checked;
+            if (removeDupes) {
+                const uniqueProxies = [...new Set(proxies)];
+                duplicatesCount = proxies.length - uniqueProxies.length;
+                proxies = uniqueProxies;
+            }
+
+            // Shuffle
+            shuffleArray(proxies);
+            
+            return proxies;
+        }
+
+        function readFile(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = () => reject(new Error('Failed to read file'));
+                reader.readAsText(file);
+            });
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function updateStats(processedCount) {
+            document.getElementById('totalProxies').textContent = originalCount;
+            document.getElementById('validProxies').textContent = 
+                document.getElementById('validateProxies').checked ? validCount : 'N/A';
+            document.getElementById('duplicatesRemoved').textContent = 
+                document.getElementById('removeDuplicates').checked ? duplicatesCount : 'N/A';
+        }
+
+        function updatePreview(proxies) {
+            previewElement.innerHTML = proxies
+                .slice(0, 50)
+                .map(proxy => `<div class="preview-line">${proxy}</div>`)
+                .join('') || '<div class="preview-line">No valid proxies to display</div>';
+        }
+
+        function downloadProxies(proxies) {
+            const blob = new Blob([proxies.join('\n')], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `proxies_${new Date().toISOString().slice(0,10)}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function showLoading(show) {
+            loadingOverlay.classList.toggle('active', show);
+        }
+
+        function showToast(message, type = 'success') {
+            toast.textContent = message;
+            toast.style.background = type === 'error' ? 'var(--secondary)' : 'var(--success)';
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // UI Actions
+        function clearAll() {
+            proxyInput.value = '';
+            fileInput.value = '';
+            updateStats(0);
+            previewElement.innerHTML = '<div class="preview-line">Your mixed proxies will appear here...</div>';
+        }
+
+        function loadSample() {
+            proxyInput.value = `us.proxy.geonode.io:10000:geonode_sample1:b82697b6-6901-4592-81e2-2ea6430cd954
+us.proxy.geonode.io:10000:geonode_sample2:b82697b6-6901-4592-81e2-2ea6430cd954
+us.proxy.geonode.io:10000:geonode_sample3:b82697b6-6901-4592-81e2-2ea6430cd954`;
+        }
+
+        // Initialize
+        proxyInput.addEventListener('input', () => {
+            const proxies = proxyInput.value.split('\n').filter(line => line.trim());
+            document.getElementById('totalProxies').textContent = proxies.length;
+        });
+
+        // Add animation on load
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.style.opacity = '0';
+            setTimeout(() => {
+                document.body.style.transition = 'opacity 0.5s ease';
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+    </script>
+</body>
+</html>
